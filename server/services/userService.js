@@ -9,7 +9,8 @@ const exists = async (email) => {
 };
 
 export const signUp = async (name, email, password) => {
-  if (exists(email)) return { success: false, message: "User already exists" };
+  if (await exists(email))
+    return { success: false, message: "User already exists" };
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await pool.query(
     "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) returning *",

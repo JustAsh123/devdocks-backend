@@ -22,7 +22,6 @@ export default function Dashboard() {
           Authorization: `${localStorage.getItem("token")}`,
         },
       });
-      console.log(res.data.projects);
       setProjects(res.data.projects);
     };
     loadProjects();
@@ -39,7 +38,7 @@ export default function Dashboard() {
           <div>
             <h1 className="text-xl font-semibold text-white">Projects</h1>
             <p className="text-sm text-[#555] mt-0.5">
-              {projects.length} project{projects.length !== 1 ? "s" : ""}
+              {projects?.length} project{projects?.length !== 1 ? "s" : ""}
             </p>
           </div>
           <button
