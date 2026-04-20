@@ -9,6 +9,7 @@ router.get(
   tokenValidator,
   projectController.getProjectMembers,
 );
+router.get("/invites", tokenValidator, projectController.getInvites);
 router.post("/create", tokenValidator, projectController.createProject);
 router.post("/invite", tokenValidator, projectController.projectInvite);
 router.post("/response", tokenValidator, projectController.inviteResponse);

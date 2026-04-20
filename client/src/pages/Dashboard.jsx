@@ -49,15 +49,15 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {projects.length === 0 ? (
-          <div className="text-center py-20 text-[#444] text-sm">
-            No projects yet. Create your first one.
-          </div>
-        ) : (
+        {projects?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {projects?.map((project) => (
               <ProjectCard key={project.id} project={project} inviter={user} />
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 text-[#444] text-sm">
+            No projects yet. Create your first one.
           </div>
         )}
       </div>

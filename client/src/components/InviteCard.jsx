@@ -1,20 +1,29 @@
+import { useEffect } from "react";
+
 // loading prop: disables buttons while API call is in progress
 export default function InviteCard({ invite, onAccept, onReject, loading }) {
-  const formattedDate = new Date(invite.invitedAt).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  const formattedDate = new Date(invite.created_at).toLocaleDateString(
+    "en-IN",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    },
+  );
+
+  useEffect(() => {
+    console.log(invite);
+  }, []);
 
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5 hover:border-[#3a3a3a] transition-colors">
       <div className="mb-3">
-        <p className="text-sm font-medium text-white">{invite.invitedBy}</p>
-        <p className="text-xs text-[#555]">{invite.invitedByEmail}</p>
+        Project: <span className="text-[#999]">{invite.name}</span>
       </div>
 
       <p className="text-xs text-[#666] mb-1">
-        Project: <span className="text-[#999]">{invite.project}</span>
+        <p className="text-sm font-medium text-white">{invite.inviter_name}</p>
+        <p className="text-xs text-[#555]">{invite.inviter_email}</p>
       </p>
       <p className="text-xs text-[#555] mb-4">Invited on {formattedDate}</p>
 

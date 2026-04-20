@@ -1,13 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import InviteCard from "../components/InviteCard";
-import { invites as initialInvites } from "../data/invites";
 import { respondToInvite } from "../api/projects";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function Invites() {
-  const [invites, setInvites] = useState(initialInvites);
+  const [invites, setInvites] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchInvites = async () => {
+      const res = await axios.get("http://localhost:3000/projects/invites", {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+        },
+      });
+      const { success, message, invites } = res.data;
+      if (!success) {
+        toast.error(message || "Failed to fetch invites");
+        return;
+      }
+      setInvites(invites);
+    };
+    fetchInvites();
+  }, []);
 
   // response = "accept" | "reject"
   const handleResponse = async (inviteId, response) => {

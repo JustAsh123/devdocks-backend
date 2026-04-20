@@ -85,6 +85,22 @@ export const projectInvite = async (req, res) => {
   });
 };
 
+export const getInvites = async (req, res) => {
+  const userId = req.user.id;
+  const result = await projectService.getInvites(userId);
+  if (!result.success) {
+    return res.json({
+      success: false,
+      message: result.message,
+    });
+  }
+  return res.json({
+    success: true,
+    message: result.message,
+    invites: result.invites,
+  });
+};
+
 export const inviteResponse = async (req, res) => {
   const { inviteId, response } = req.body;
   const userId = req.user.id;

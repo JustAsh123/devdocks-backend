@@ -106,6 +106,23 @@ export const inviteProject = async (projId, userId, email) => {
   }
 };
 
+export const getInvites = async (userId) => {
+  const result = await pool.query(
+    "SELECT p.id, p.name, pm.created_at, u.name AS inviter_name, u.email AS inviter_email FROM projects p INNER JOIN project_invites pm ON p.id = pm.proj_id INNER JOIN users u ON pm.inviter_id = u.id WHERE pm.invitee_id = $1;",
+    [userId],
+  );
+
+  if (result.rows.length === 0) {
+    return { success: false, message: "No invites found" };
+  }
+
+  return {
+    success: true,
+    invites: result.rows,
+    message: "Invites fetched successfully",
+  };
+};
+
 export const inviteResponse = async (userId, inviteId, response) => {
   console.log(inviteId, userId);
   const res = await pool.query(
