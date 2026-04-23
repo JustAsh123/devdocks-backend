@@ -5,9 +5,14 @@ const tokenValidator = (req, res, next) => {
   if (!token) {
     return res.json({ status: false, message: "Token not found" });
   }
-  const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
-  req.user = decodedToken;
-  next();
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    req.user = decodedToken;
+    next();
+  } catch (err) {
+    console.log(err);
+    res.json({ status: false, message: "Invalid token" });
+  }
 };
 
 export default tokenValidator;

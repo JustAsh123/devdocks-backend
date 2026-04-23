@@ -23,7 +23,7 @@ export const getProjectMembers = async (req, res) => {
   const result = await projectService.getProjectMembers(projId);
   if (!result.success) {
     return res.json({
-      status: false,
+      success: false,
       message: result.message,
     });
   }
@@ -46,12 +46,12 @@ export const createProject = async (req, res) => {
 
   if (!result.success) {
     return res.json({
-      status: false,
+      success: false,
       message: result.message,
     });
   }
   return res.json({
-    status: true,
+    success: true,
     message: result.message,
     project: result.project.name,
     user: req.user.name,

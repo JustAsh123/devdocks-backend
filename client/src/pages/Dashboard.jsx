@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navbar from "../components/Navbar";
 import ProjectCard from "../components/ProjectCard";
 import CreateProjectModal from "../modals/CreateProjectModal";
@@ -14,22 +14,18 @@ export default function Dashboard() {
   const [inviteTarget, setInviteTarget] = useState(null); // { id, title }
 
   // Load Projects
-  useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const res = await getProjects();
-        setProjects(res.data.projects || []);
-      } catch (err) {
-        console.error("Failed to load projects", err);
-      }
-    };
-    loadProjects();
+  const loadProjects = useCallback(async () => {
+    try {
+      const res = await getProjects();
+      setProjects(res.data.projects || []);
+    } catch (err) {
+      console.error("Failed to load projects", err);
+    }
   }, []);
 
-  const handleCreate = (newProject) => {
-    // Add new project to the list locally (optimistic update)
-    setProjects((prev) => [newProject, ...prev]);
-  };
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
@@ -67,7 +63,7 @@ export default function Dashboard() {
       {showCreate && (
         <CreateProjectModal
           onClose={() => setShowCreate(false)}
-          onCreate={handleCreate}
+          onCreate={() => { setShowCreate(false); loadProjects(); }}
         />
       )}
 

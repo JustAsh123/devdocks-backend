@@ -17,7 +17,7 @@ export const signUp = async (name, email, password) => {
     [name, email, hashedPassword],
   );
   console.log(result);
-  if (result.rows.rowCount === 0)
+  if (result.rowCount === 0)
     return { success: false, message: "User not created" };
   return { success: true, data: result.rows[0] };
 };

@@ -11,23 +11,15 @@ export default function CreateProjectModal({ onClose, onCreate }) {
     setLoading(true);
     try {
       const res = await createProject(title.trim());
-      // ⚠️ server uses "status" (not "success") for this route
-      const { status, message, user } = res.data;
-      if (!status) {
+      const { success, message } = res.data;
+      if (!success) {
         toast.error(message || "Failed to create project");
         return;
       }
       toast.success(message || "Project created!");
-      onCreate({
-        id: Date.now(), // optimistic client-side id (no id returned by server)
-        title: title.trim(),
-        createdAt: new Date().toISOString(),
-        members: [user || "You"],
-      });
-      setTitle("");
-      onClose();
+      onCreate(); // signals Dashboard to re-fetch
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
