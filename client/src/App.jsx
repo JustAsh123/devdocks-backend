@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Invites from "./pages/Invites";
 import ProjectBoard from "./pages/ProjectBoard";
+import Documents from "./pages/Documents";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/invites" element={<Invites />} />
         <Route path="/project/:projectId" element={<ProjectBoard />} />
+        <Route path="/project/:projectId/docs" element={<Documents />} />
       </Routes>
     </BrowserRouter>
   );

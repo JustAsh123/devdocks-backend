@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "axios": "^1.15.1",
     "dotenv": "^17.4.2",
+    "easymde": "^2.20.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.14.1",
+    "react-simplemde-editor": "^5.2.0",
     "react-toastify": "^11.1.0"
   },
   "devDependencies": {

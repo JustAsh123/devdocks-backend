@@ -4,7 +4,8 @@ import Navbar from "../components/Navbar";
 import AddTaskModal from "../modals/AddTaskModal";
 import TaskDetailModal from "../modals/TaskDetailModal";
 import { getTasks, updateTaskStatus } from "../api/tasks";
-import { getProjects } from "../api/projects";
+import { getProjects, getMembersStats } from "../api/projects";
+import { getDocuments } from "../api/documents";
 
 // ── Column config ─────────────────────────────────────────────────────────────
 const COLUMNS = [
@@ -149,6 +150,92 @@ function KanbanColumn({ col, tasks, onDrop, onDragOver, onDragLeave, isDragOver,
   );
 }
 
+// ── Project Members Sidebar ───────────────────────────────────────────────────
+function BoardMembers({ projectId }) {
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    getMembersStats(projectId)
+      .then((res) => setMembers(res.data.members || []))
+      .catch(() => {});
+  }, [projectId]);
+
+  return (
+    <div className="w-72 border-l border-[#1a1a1a] bg-[#0c0c0c] flex flex-col">
+      <div className="px-6 py-5 border-b border-[#1a1a1a]">
+        <h3 className="text-sm font-semibold text-white">Team Workload</h3>
+        <p className="text-xs text-[#555] mt-1">{members.length} active members</p>
+      </div>
+      <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-3">
+        {members.map((m) => (
+          <div key={m.id} className="flex items-center justify-between p-3 rounded-xl bg-[#141414] border border-[#1e1e1e] hover:border-[#2a2a2a] transition-colors">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                {m.name[0].toUpperCase()}
+              </div>
+              <div className="truncate">
+                <p className="text-sm font-medium text-[#e0e0e0] truncate">{m.name}</p>
+              </div>
+            </div>
+            <span className={`shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded-full ${m.task_count > 0 ? "text-amber-400 bg-amber-500/10 border border-amber-500/20" : "text-[#555] bg-[#1a1a1a]"}`}>
+              {m.task_count}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Documents Carousel ────────────────────────────────────────────────────────
+function DocsCarousel({ projectId, navigate }) {
+  const [docs, setDocs] = useState([]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    getDocuments(projectId)
+      .then((res) => setDocs(res.data.documents || []))
+      .catch(() => {});
+  }, [projectId]);
+
+  if (docs.length === 0) return null;
+
+  return (
+    <div className="border-t border-[#1a1a1a] bg-[#0c0c0c] px-8 py-6 shrink-0">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+          <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Project Documents
+        </h3>
+        <button onClick={() => navigate(`/project/${projectId}/docs`)} className="text-xs text-[#555] hover:text-white transition-colors">
+          View All →
+        </button>
+      </div>
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+        {docs.map((doc) => (
+          <button
+            key={doc.id}
+            onClick={() => navigate(`/project/${projectId}/docs`)}
+            className="flex-shrink-0 w-64 p-4 text-left rounded-xl border border-[#2a2a2a] bg-[#141414] hover:bg-[#1e1e1e] hover:border-[#3a3a3a] transition-all group"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-8 h-8 rounded-lg bg-[#222] flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                📄
+              </div>
+              <span className="text-[10px] font-medium text-[#555] group-hover:text-[#888]">
+                {new Date(doc.updated_at).toLocaleDateString()}
+              </span>
+            </div>
+            <h4 className="text-sm font-semibold text-[#e0e0e0] truncate">{doc.title || "Untitled Document"}</h4>
+            <p className="text-[11px] text-[#666] mt-1.5 truncate font-medium">By {doc.created_by_name}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Main Board Page ───────────────────────────────────────────────────────────
 export default function ProjectBoard() {
   const { projectId } = useParams();
@@ -259,32 +346,52 @@ export default function ProjectBoard() {
             <h1 className="text-xl font-semibold text-white">Board</h1>
             <p className="text-xs text-[#444] mt-0.5">{tasks.length} task{tasks.length !== 1 ? "s" : ""}</p>
           </div>
-          <button
-            onClick={() => handleOpenAdd("todo")}
-            className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-[#e0e0e0] transition-colors"
-          >
-            + New Task
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(`/project/${projectId}/docs`)}
+              className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 text-sm font-medium rounded-lg transition-all flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              Project Docs
+            </button>
+            <button
+              onClick={() => handleOpenAdd("todo")}
+              className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-[#e0e0e0] transition-colors"
+            >
+              + New Task
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Kanban columns */}
-      <div className="flex-1 overflow-x-auto px-8 py-6">
-        <div className="flex gap-5 h-full" style={{ minWidth: "max-content" }}>
-          {COLUMNS.map((col) => (
-            <KanbanColumn
-              key={col.id}
-              col={col}
-              tasks={columnTasks(col.id)}
-              isDragOver={dragOverCol === col.id}
-              onDragOver={(e) => { handleDragOver(e); setDragOverCol(col.id); }}
-              onDragLeave={() => setDragOverCol(null)}
-              onDrop={handleDrop}
-              onTaskClick={setSelectedTask}
-              onAddTask={handleOpenAdd}
-            />
-          ))}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Main Kanban & Docs Area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Kanban columns */}
+          <div className="flex-1 overflow-x-auto px-8 py-6">
+            <div className="flex gap-5 h-full" style={{ minWidth: "max-content" }}>
+              {COLUMNS.map((col) => (
+                <KanbanColumn
+                  key={col.id}
+                  col={col}
+                  tasks={columnTasks(col.id)}
+                  isDragOver={dragOverCol === col.id}
+                  onDragOver={(e) => { handleDragOver(e); setDragOverCol(col.id); }}
+                  onDragLeave={() => setDragOverCol(null)}
+                  onDrop={handleDrop}
+                  onTaskClick={setSelectedTask}
+                  onAddTask={handleOpenAdd}
+                />
+              ))}
+            </div>
+          </div>
+          
+          {/* Documents Carousel */}
+          <DocsCarousel projectId={projectId} navigate={navigate} />
         </div>
+
+        {/* Right Sidebar: Members */}
+        <BoardMembers projectId={projectId} />
       </div>
 
       {/* Modals */}
