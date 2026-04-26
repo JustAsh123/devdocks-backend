@@ -18,16 +18,12 @@ export default function Signup() {
     setLoading(true);
     try {
       const res = await signupUser(form);
-      const { success, message, data, token } = res.data;
-      if (!success) {
-        toast.error(message || "Signup failed");
-        return;
-      }
+      const { data, token } = res.data;
       login({ token, user: data });
       toast.success("Account created!");
       navigate("/dashboard");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

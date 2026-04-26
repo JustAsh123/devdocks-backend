@@ -23,7 +23,7 @@ function ProjectCard({ project, selected, onSelect }) {
   useEffect(() => {
     getProjectMembers(project.id)
       .then((res) => {
-        if (res.data.success) setMembers(res.data.members);
+        setMembers(res.data.members || []);
       })
       .catch(() => {});
   }, [project.id]);

@@ -12,11 +12,20 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-API.interceptors.response.use((res) => {
-  if (res.data.success === false) {
-    throw new Error(res.data.message);
+API.interceptors.response.use(
+  (res) => {
+    // Treat success:false as a thrown error so all catch() blocks fire consistently
+    if (res.data && res.data.success === false) {
+      const err = new Error(res.data.message || "Request failed");
+      err.response = res; // preserve res so callers can still access res.data
+      throw err;
+    }
+    return res;
+  },
+  (error) => {
+    // Network errors, 4xx, 5xx — re-throw so callers always get a rejected promise
+    return Promise.reject(error);
   }
-  return res;
-});
+);
 
 export default API;

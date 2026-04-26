@@ -18,16 +18,12 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await loginUser(form);
-      const { success, message, data, token } = res.data;
-      if (!success) {
-        toast.error(message || "Login failed");
-        return;
-      }
+      const { data, token } = res.data;
       login({ token, user: data });
       toast.success("Logged in successfully!");
       navigate("/dashboard");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

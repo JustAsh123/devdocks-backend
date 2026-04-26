@@ -7,10 +7,6 @@ export const getProjects = async (userId) => {
     [userId],
   );
 
-  if (result.rows.length === 0) {
-    return { success: false, message: "No projects found" };
-  }
-
   return {
     success: true,
     projects: result.rows,
@@ -24,9 +20,6 @@ export const getProjectMembers = async (projId) => {
     "select u.id, u.name from users as u inner join project_members as pm on pm.user_id = u.id where pm.project_id = $1",
     [projId],
   );
-  if (result.rows.length === 0) {
-    return { success: false, message: "No members found" };
-  }
   return {
     success: true,
     members: result.rows,
@@ -118,10 +111,6 @@ export const getInvites = async (userId) => {
     [userId],
   );
 
-  if (result.rows.length === 0) {
-    return { success: false, message: "No invites found" };
-  }
-
   return {
     success: true,
     invites: result.rows,
@@ -131,12 +120,10 @@ export const getInvites = async (userId) => {
 
 // Accept or reject a project invite
 export const inviteResponse = async (userId, inviteId, response) => {
-  console.log(inviteId, userId);
   const res = await pool.query(
     "SELECT proj_id FROM project_invites WHERE id = $1 and invitee_id = $2",
     [inviteId, userId],
   );
-  console.log(res);
   if (res.rowCount === 0) {
     return { success: false, message: "Invite not found" };
   }
@@ -166,6 +153,7 @@ export const inviteResponse = async (userId, inviteId, response) => {
       return { success: false, message: "Error rejecting invite" };
     }
   }
+  return { success: false, message: "Invalid response value. Must be 'accept' or 'reject'" };
 };
 
 // Get each member's task count for a project

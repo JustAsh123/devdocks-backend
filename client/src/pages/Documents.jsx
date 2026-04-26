@@ -256,7 +256,7 @@ export default function Documents() {
   useEffect(() => {
     getProjects()
       .then((res) => {
-        const proj = (res.data.projects || []).find((p) => p.id === projectId);
+        const proj = (res.data.projects || []).find((p) => String(p.id) === projectId);
         if (proj) setProjectName(proj.name);
       })
       .catch(() => {});

@@ -300,7 +300,7 @@ export default function ProjectBoard() {
   useEffect(() => {
     getProjects()
       .then((res) => {
-        const proj = (res.data.projects || []).find((p) => p.id === projectId);
+        const proj = (res.data.projects || []).find((p) => String(p.id) === projectId);
         if (proj) setProjectName(proj.name);
       })
       .catch(() => {});
@@ -337,14 +337,14 @@ export default function ProjectBoard() {
 
     // Optimistic update
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: toStatus } : t)),
+      prev.map((t) => (String(t.id) === taskId ? { ...t, status: toStatus } : t)),
     );
     try {
       await updateTaskStatus(projectId, taskId, toStatus);
     } catch {
       // Revert on failure
       setTasks((prev) =>
-        prev.map((t) => (t.id === taskId ? { ...t, status: fromStatus } : t)),
+        prev.map((t) => (String(t.id) === taskId ? { ...t, status: fromStatus } : t)),
       );
     }
   };

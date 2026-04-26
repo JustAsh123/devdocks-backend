@@ -11,31 +11,28 @@ export default function Invites() {
 
   useEffect(() => {
     const fetchInvites = async () => {
-      const res = await API.get("/projects/invites");
-      const { success, message, invites } = res.data;
-      if (!success) {
-        toast.error(message || "Failed to fetch invites");
-        return;
+      try {
+        const res = await API.get("/projects/invites");
+        setInvites(res.data.invites || []);
+      } catch (err) {
+        // Only show a toast for real errors; empty invites list is handled silently
+        const msg = err?.response?.data?.message || err?.message;
+        if (msg && msg !== "No invites found") {
+          toast.error(msg || "Failed to fetch invites");
+        }
       }
-      setInvites(invites);
     };
     fetchInvites();
   }, []);
 
-  // response = "accept" | "reject"
   const handleResponse = async (inviteId, response) => {
     setLoadingId(inviteId);
     try {
       const res = await respondToInvite(inviteId, response);
-      const { success, message } = res.data;
-      if (!success) {
-        toast.error(message || "Failed to respond to invite");
-        return;
-      }
-      toast.success(message || `Invite ${response}ed`);
+      toast.success(res.data.message || `Invite ${response}ed`);
       setInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || err?.message || "Something went wrong");
     } finally {
       setLoadingId(null);
     }

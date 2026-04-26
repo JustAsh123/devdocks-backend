@@ -11,12 +11,10 @@ export default function CreateProjectModal({ onClose, onCreate }) {
     setLoading(true);
     try {
       const res = await createProject(title.trim());
-      const { success, message } = res.data;
-      if (!success) { toast.error(message || "Failed to create project"); return; }
-      toast.success(message || "Project created!");
+      toast.success(res.data.message || "Project created!");
       onCreate();
     } catch (err) {
-      toast.error(err?.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

@@ -16,7 +16,6 @@ export const signUp = async (name, email, password) => {
     "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) returning *",
     [name, email, hashedPassword],
   );
-  console.log(result);
   if (result.rowCount === 0)
     return { success: false, message: "User not created" };
   return { success: true, data: result.rows[0] };

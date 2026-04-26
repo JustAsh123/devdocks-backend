@@ -13,18 +13,12 @@ export default function InviteMemberModal({ project, onClose }) {
     if (!email.trim()) return;
     setLoading(true);
     try {
-      // POST /projects/invite → body: { projId, email }
       const res = await inviteToProject(project.id, email.trim());
-      const { success, message } = res.data;
-      if (!success) {
-        toast.error(message || "Failed to send invite");
-        return;
-      }
-      toast.success(message || "Invite sent!");
+      toast.success(res.data.message || "Invite sent!");
       setEmail("");
       onClose();
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      toast.error(err?.response?.data?.message || err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
