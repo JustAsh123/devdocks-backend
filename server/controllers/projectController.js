@@ -62,7 +62,7 @@ export const projectInvite = async (req, res) => {
   const { projId, email } = req.body;
   const userId = req.user.id;
 
-  // Check if we have all fields
+  // Both fields required
   if (!projId || !email) {
     return res.json({
       success: false,
@@ -129,7 +129,7 @@ export const inviteResponse = async (req, res) => {
   });
 };
 
-// GET /projects/members-stats/:projId
+// Get each member's task count for a project
 export const getMembersStats = async (req, res) => {
   const { projId } = req.params;
   const result = await projectService.getMembersStats(projId);
@@ -139,7 +139,7 @@ export const getMembersStats = async (req, res) => {
   return res.json({ success: true, members: result.members });
 };
 
-// DELETE /projects/members/:projId/:memberId
+// Remove a member from a project (owner only)
 export const removeMember = async (req, res) => {
   const { projId, memberId } = req.params;
   const requesterId = req.user.id;

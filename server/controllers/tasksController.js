@@ -1,6 +1,6 @@
 import * as tasksService from "../services/tasksService.js";
 
-// GET /tasks/:projectId
+// Get all tasks in a project
 export const getTasks = async (req, res) => {
   const { projectId } = req.params;
   const userId = req.user.id;
@@ -12,7 +12,7 @@ export const getTasks = async (req, res) => {
   return res.json({ success: true, tasks: result.data });
 };
 
-// POST /tasks/:projectId
+// Create a new task
 export const addTask = async (req, res) => {
   const { projectId } = req.params;
   const { title, description, priority } = req.body;
@@ -29,7 +29,7 @@ export const addTask = async (req, res) => {
     description || "",
     projectId,
     userId,
-    priority,  // optional, defaults to "medium" in service
+    priority,
   );
   if (!result.success) {
     return res.status(403).json({ success: false, message: result.error });
@@ -37,7 +37,7 @@ export const addTask = async (req, res) => {
   return res.status(201).json({ success: true, task: result.data });
 };
 
-// PUT /tasks/:projectId/:taskId
+// Update a task's title and description
 export const updateTask = async (req, res) => {
   const { projectId, taskId } = req.params;
   const { title, description } = req.body;
@@ -62,7 +62,7 @@ export const updateTask = async (req, res) => {
   return res.json({ success: true, task: result.data });
 };
 
-// DELETE /tasks/:projectId/:taskId
+// Delete a task
 export const deleteTask = async (req, res) => {
   const { projectId, taskId } = req.params;
   const userId = req.user.id;
@@ -74,7 +74,7 @@ export const deleteTask = async (req, res) => {
   return res.json({ success: true, message: result.message });
 };
 
-// PATCH /tasks/:projectId/:taskId/assign
+// Assign a task to a member
 export const assignTask = async (req, res) => {
   const { projectId, taskId } = req.params;
   const { assigneeId } = req.body;
@@ -98,7 +98,7 @@ export const assignTask = async (req, res) => {
   return res.json({ success: true, task: result.data });
 };
 
-// PATCH /tasks/:projectId/:taskId/unassign
+// Remove the assignee from a task
 export const unassignTask = async (req, res) => {
   const { projectId, taskId } = req.params;
   const userId = req.user.id;
@@ -110,7 +110,7 @@ export const unassignTask = async (req, res) => {
   return res.json({ success: true, task: result.data });
 };
 
-// PATCH /tasks/:projectId/:taskId/status
+// Update a task's status
 export const updateTaskStatus = async (req, res) => {
   const { projectId, taskId } = req.params;
   const { status } = req.body;

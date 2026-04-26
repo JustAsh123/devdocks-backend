@@ -5,6 +5,7 @@ import tokenValidatior from "./middlewares/tokenValidator.js";
 import userRoutes from "./routes/userRoutes.js";
 import projectRoutes from "./routes/projectRoute.js";
 import tasksRoutes from "./routes/tasksRouter.js";
+import documentRoutes from "./routes/documentRouter.js";
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.get("/", tokenValidatior, (req, res) => {
 app.use("/users", userRoutes);
 app.use("/projects", tokenValidatior, projectRoutes);
 app.use("/tasks", tokenValidatior, tasksRoutes);
+app.use("/documents", tokenValidatior, documentRoutes);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

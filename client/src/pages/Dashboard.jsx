@@ -25,7 +25,9 @@ function MemberPanel({ project, currentUserId, onMemberRemoved }) {
     }
   }, [project.id]);
 
-  useEffect(() => { fetchStats(); }, [fetchStats]);
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const handleRemove = async (memberId, memberName) => {
     if (!confirm(`Remove ${memberName} from "${project.name}"?`)) return;
@@ -48,10 +50,15 @@ function MemberPanel({ project, currentUserId, onMemberRemoved }) {
     <div className="animate-slideUp flex flex-col gap-4">
       {/* Project header */}
       <div className="border-b border-[#1e1e1e] pb-4">
-        <p className="text-[10px] uppercase tracking-widest text-[#444] mb-1">Selected Project</p>
-        <h2 className="text-base font-semibold text-white leading-tight">{project.name}</h2>
+        <p className="text-[10px] uppercase tracking-widest text-[#444] mb-1">
+          Selected Project
+        </p>
+        <h2 className="text-base font-semibold text-white leading-tight">
+          {project.name}
+        </h2>
         <p className="text-xs text-[#444] mt-1">
-          {members.length} member{members.length !== 1 ? "s" : ""} · {total} task{total !== 1 ? "s" : ""} assigned
+          {members.length} member{members.length !== 1 ? "s" : ""} · {total}{" "}
+          task{total !== 1 ? "s" : ""} assigned
         </p>
       </div>
 
@@ -59,7 +66,10 @@ function MemberPanel({ project, currentUserId, onMemberRemoved }) {
       {loading ? (
         <div className="flex flex-col gap-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-12 bg-[#1a1a1a] rounded-xl animate-pulse" />
+            <div
+              key={i}
+              className="h-12 bg-[#1a1a1a] rounded-xl animate-pulse"
+            />
           ))}
         </div>
       ) : members.length === 0 ? (
@@ -76,21 +86,25 @@ function MemberPanel({ project, currentUserId, onMemberRemoved }) {
                 style={{ animationDelay: `${i * 50}ms` }}
               >
                 {/* Avatar */}
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+                <div className="w-8 h-8 rounded-full bg-linear-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
                   {member.name[0].toUpperCase()}
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <p className="text-sm font-medium text-white truncate">{member.name}</p>
+                    <p className="text-sm font-medium text-white truncate">
+                      {member.name}
+                    </p>
                     {isOwnerMember && (
                       <span className="text-[9px] text-[#555] border border-[#222] px-1.5 py-0.5 rounded-full shrink-0">
                         owner
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[#444] truncate">{member.email}</p>
+                  <p className="text-[11px] text-[#444] truncate">
+                    {member.email}
+                  </p>
                 </div>
 
                 {/* Task count badge */}
@@ -148,7 +162,9 @@ export default function Dashboard() {
     }
   }, [selectedProject]);
 
-  useEffect(() => { loadProjects(); }, []); // eslint-disable-line
+  useEffect(() => {
+    loadProjects();
+  }, []); // eslint-disable-line
 
   const handleSelectProject = (project) => {
     setSelectedProject((prev) => (prev?.id === project.id ? null : project));
@@ -159,11 +175,12 @@ export default function Dashboard() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-6 py-10 flex gap-7">
-
         {/* ── Left: Member panel ─────────────────────────────────────── */}
         <div
           className={`transition-all duration-300 ease-in-out shrink-0 ${
-            selectedProject ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"
+            selectedProject
+              ? "w-72 opacity-100"
+              : "w-0 opacity-0 overflow-hidden"
           }`}
         >
           {selectedProject && (
@@ -185,7 +202,8 @@ export default function Dashboard() {
                 {projects?.length} project{projects?.length !== 1 ? "s" : ""}
                 {selectedProject && (
                   <span className="ml-2 text-[#333]">
-                    · viewing <span className="text-[#555]">{selectedProject.name}</span>
+                    · viewing{" "}
+                    <span className="text-[#555]">{selectedProject.name}</span>
                   </span>
                 )}
               </p>
@@ -232,7 +250,10 @@ export default function Dashboard() {
       {showCreate && (
         <CreateProjectModal
           onClose={() => setShowCreate(false)}
-          onCreate={() => { setShowCreate(false); loadProjects(); }}
+          onCreate={() => {
+            setShowCreate(false);
+            loadProjects();
+          }}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 
-// ── Guard: check if a user is a member of a project ──────────────────────────
+// Check if user is a member of a project
 export const isMember = async (user_id, project_id) => {
   const query = `
     SELECT 1 FROM project_members 
@@ -15,7 +15,7 @@ export const isMember = async (user_id, project_id) => {
   }
 };
 
-// ── Guard: check if a task belongs to a project ───────────────────────────────
+// Check if a task belongs to a project
 const taskBelongsToProject = async (task_id, project_id) => {
   const res = await pool.query(
     "SELECT 1 FROM tasks WHERE id = $1 AND project_id = $2",
@@ -24,7 +24,7 @@ const taskBelongsToProject = async (task_id, project_id) => {
   return res.rowCount > 0;
 };
 
-// ── Create a task ─────────────────────────────────────────────────────────────
+// Create a new task in a project
 export const addTask = async (title, description, project_id, user_id, priority = "medium") => {
   const query = `
     INSERT INTO tasks (title, description, project_id, created_by, priority)
@@ -43,7 +43,7 @@ export const addTask = async (title, description, project_id, user_id, priority 
   }
 };
 
-// ── Get all tasks for a project ───────────────────────────────────────────────
+// Get all tasks for a project with assignee name
 export const getTasks = async (project_id, user_id) => {
   try {
     if (!(await isMember(user_id, project_id))) {
@@ -64,7 +64,7 @@ export const getTasks = async (project_id, user_id) => {
   }
 };
 
-// ── Update task title / description ──────────────────────────────────────────
+// Update a task's title and description
 export const updateTask = async (
   task_id,
   project_id,
@@ -90,7 +90,7 @@ export const updateTask = async (
   }
 };
 
-// ── Delete a task ─────────────────────────────────────────────────────────────
+// Delete a task
 export const deleteTask = async (task_id, project_id, user_id) => {
   try {
     if (!(await isMember(user_id, project_id))) {
@@ -107,7 +107,7 @@ export const deleteTask = async (task_id, project_id, user_id) => {
   }
 };
 
-// ── Assign a task to a project member ────────────────────────────────────────
+// Assign a task to a project member
 export const assignTask = async (task_id, project_id, assignee_id, user_id) => {
   try {
     if (!(await isMember(user_id, project_id))) {
@@ -133,7 +133,7 @@ export const assignTask = async (task_id, project_id, assignee_id, user_id) => {
   }
 };
 
-// ── Unassign a task ───────────────────────────────────────────────────────────
+// Remove the assignee from a task
 export const unassignTask = async (task_id, project_id, user_id) => {
   try {
     if (!(await isMember(user_id, project_id))) {
@@ -153,7 +153,7 @@ export const unassignTask = async (task_id, project_id, user_id) => {
   }
 };
 
-// ── Update task status (todo | in_progress | done) ───────────────────────────
+// Update a task's status — must be one of the valid values
 export const updateTaskStatus = async (
   task_id,
   project_id,
