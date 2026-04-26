@@ -31,9 +31,9 @@ function timeAgo(dateParam) {
   const days = Math.round(hours / 24);
 
   if (seconds < 60) return "just now";
-  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-  if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-  if (days < 30) return `${days} day${days !== 1 ? 's' : ''} ago`;
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  if (days < 30) return `${days} day${days !== 1 ? "s" : ""} ago`;
   return date.toLocaleDateString();
 }
 
@@ -61,15 +61,30 @@ const mdeOptions = {
   status: false,
   minHeight: "calc(100vh - 200px)",
   toolbar: [
-    "bold", "italic", "heading", "|",
-    "quote", "unordered-list", "ordered-list", "|",
-    "link", "image", "|",
-    "guide"
-  ]
+    "bold",
+    "italic",
+    "heading",
+    "|",
+    "quote",
+    "unordered-list",
+    "ordered-list",
+    "|",
+    "link",
+    "image",
+    "|",
+    "guide",
+  ],
 };
 
 // Isolated editor — owns its own title/content state so typing never re-renders the parent
-function DocEditor({ projectId, doc, initialTitle, initialContent, onSaved, onDeleted }) {
+function DocEditor({
+  projectId,
+  doc,
+  initialTitle,
+  initialContent,
+  onSaved,
+  onDeleted,
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
@@ -152,19 +167,28 @@ function DocEditor({ projectId, doc, initialTitle, initialContent, onSaved, onDe
             </h1>
           )}
           <p className="text-[13px] text-[#555] mt-2 truncate font-medium">
-            Created by <span className="text-[#888]">{doc.created_by_name || "Unknown"}</span> <span className="mx-1.5 text-[#333]">•</span> Last edited {timeAgo(doc.updated_at)}
+            Created by{" "}
+            <span className="text-[#888]">
+              {doc.created_by_name || "Unknown"}
+            </span>{" "}
+            <span className="mx-1.5 text-[#333]">•</span> Last edited{" "}
+            {timeAgo(doc.updated_at)}
           </p>
         </div>
 
         <div className="flex items-center gap-4 shrink-0 mt-1">
           {isDirty && (
-            <span className="text-[11px] text-[#444] animate-fadeIn">Unsaved</span>
+            <span className="text-[11px] text-[#444] animate-fadeIn">
+              Unsaved
+            </span>
           )}
-          
+
           <button
             onClick={() => setIsEditing(!isEditing)}
             className={`text-xs font-medium transition-colors ${
-              isEditing ? "text-[#888] hover:text-white" : "text-blue-400 hover:text-blue-300"
+              isEditing
+                ? "text-[#888] hover:text-white"
+                : "text-blue-400 hover:text-blue-300"
             }`}
           >
             {isEditing ? "Done Editing" : "Edit Document"}
@@ -204,16 +228,12 @@ function DocEditor({ projectId, doc, initialTitle, initialContent, onSaved, onDe
               />
             </div>
             <div className="flex-1 h-full overflow-y-auto px-8 py-6 text-[#d4d4d4] prose prose-invert max-w-none">
-              <ReactMarkdown>
-                {content || "*Empty document*"}
-              </ReactMarkdown>
+              <ReactMarkdown>{content || "*Empty document*"}</ReactMarkdown>
             </div>
           </div>
         ) : (
           <div className="h-full overflow-y-auto px-10 py-8 text-[#d4d4d4] prose prose-invert max-w-3xl mx-auto">
-            <ReactMarkdown>
-              {content || "*Empty document*"}
-            </ReactMarkdown>
+            <ReactMarkdown>{content || "*Empty document*"}</ReactMarkdown>
           </div>
         )}
       </div>
@@ -265,12 +285,12 @@ export default function Documents() {
     try {
       const res = await getDocument(projectId, doc.id);
       const full = res.data.document;
-      setActiveDocMeta({ 
-        id: full.id, 
-        title: full.title, 
-        content: full.content || "", 
-        created_by_name: full.created_by_name, 
-        updated_at: full.updated_at 
+      setActiveDocMeta({
+        id: full.id,
+        title: full.title,
+        content: full.content || "",
+        created_by_name: full.created_by_name,
+        updated_at: full.updated_at,
       });
     } catch {
       toast.error("Failed to load document");
@@ -283,8 +303,10 @@ export default function Documents() {
   const handleSaved = (docId, newTitle) => {
     setDocs((prev) =>
       prev.map((d) =>
-        d.id === docId ? { ...d, title: newTitle, updated_at: new Date().toISOString() } : d
-      )
+        d.id === docId
+          ? { ...d, title: newTitle, updated_at: new Date().toISOString() }
+          : d,
+      ),
     );
   };
 
@@ -311,7 +333,10 @@ export default function Documents() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex flex-col" data-color-mode="dark">
+    <div
+      className="min-h-screen bg-[#0f0f0f] flex flex-col"
+      data-color-mode="dark"
+    >
       <Navbar />
 
       {/* Page header */}
@@ -324,7 +349,9 @@ export default function Documents() {
             ← Board
           </button>
           <span className="text-[#333]">/</span>
-          <span className="text-white text-sm font-medium">{projectName || "Project"}</span>
+          <span className="text-white text-sm font-medium">
+            {projectName || "Project"}
+          </span>
         </div>
         <div className="flex items-end justify-between">
           <div>
@@ -351,7 +378,10 @@ export default function Documents() {
             onChange={(e) => setNewTitle(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleCreate();
-              if (e.key === "Escape") { setCreating(false); setNewTitle(""); }
+              if (e.key === "Escape") {
+                setCreating(false);
+                setNewTitle("");
+              }
             }}
             placeholder="Document title..."
             className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] text-white text-sm rounded-lg px-3.5 py-2 outline-none focus:border-[#444] placeholder:text-[#444] transition-colors"
@@ -363,7 +393,10 @@ export default function Documents() {
             Create
           </button>
           <button
-            onClick={() => { setCreating(false); setNewTitle(""); }}
+            onClick={() => {
+              setCreating(false);
+              setNewTitle("");
+            }}
             className="text-[#555] hover:text-white transition-colors text-xl leading-none"
           >
             ×
@@ -373,15 +406,19 @@ export default function Documents() {
 
       {/* Split pane */}
       <div className="flex flex-1 overflow-hidden">
-
         {/* Sidebar */}
         <aside className="w-64 shrink-0 border-r border-[#1a1a1a] flex flex-col overflow-y-auto p-3 gap-1">
           {loadingList ? (
             [1, 2, 3].map((i) => (
-              <div key={i} className="h-14 bg-[#1a1a1a] rounded-xl animate-pulse" />
+              <div
+                key={i}
+                className="h-14 bg-[#1a1a1a] rounded-xl animate-pulse"
+              />
             ))
           ) : docs.length === 0 ? (
-            <p className="text-xs text-[#333] text-center py-10">No documents yet.</p>
+            <p className="text-xs text-[#333] text-center py-10">
+              No documents yet.
+            </p>
           ) : (
             docs.map((doc) => (
               <DocRow
@@ -398,7 +435,14 @@ export default function Documents() {
         <main className="flex-1 flex flex-col overflow-hidden">
           {!activeDocMeta && !loadingDoc ? (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 text-[#333]">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              >
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14,2 14,8 20,8" />
                 <line x1="16" y1="13" x2="8" y2="13" />

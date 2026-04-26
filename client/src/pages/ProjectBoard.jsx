@@ -61,7 +61,9 @@ function TaskCard({ task, onDragStart, onClick }) {
     >
       {/* Priority badge */}
       <div className="flex items-start justify-between gap-2 mb-2">
-        <p className="text-sm font-medium text-white leading-snug">{task.title}</p>
+        <p className="text-sm font-medium text-white leading-snug">
+          {task.title}
+        </p>
         <span
           className={`shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded-full border capitalize ${
             PRIORITY_STYLES[task.priority] || PRIORITY_STYLES.medium
@@ -85,7 +87,9 @@ function TaskCard({ task, onDragStart, onClick }) {
             <div className="w-5 h-5 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-[9px] font-bold text-white">
               {task.assignee_name[0].toUpperCase()}
             </div>
-            <span className="text-[11px] text-[#666]">{task.assignee_name}</span>
+            <span className="text-[11px] text-[#666]">
+              {task.assignee_name}
+            </span>
           </div>
         ) : (
           <span className="text-[11px] text-[#3a3a3a]">Unassigned</span>
@@ -96,17 +100,30 @@ function TaskCard({ task, onDragStart, onClick }) {
 }
 
 // ── Kanban Column ─────────────────────────────────────────────────────────────
-function KanbanColumn({ col, tasks, onDrop, onDragOver, onDragLeave, isDragOver, onTaskClick, onAddTask }) {
+function KanbanColumn({
+  col,
+  tasks,
+  onDrop,
+  onDragOver,
+  onDragLeave,
+  isDragOver,
+  onTaskClick,
+  onAddTask,
+}) {
   return (
     <div
       className="animate-slideUp flex flex-col min-w-[280px] max-w-[280px]"
-      style={{ animationDelay: `${COLUMNS.findIndex(c => c.id === col.id) * 70}ms` }}
+      style={{
+        animationDelay: `${COLUMNS.findIndex((c) => c.id === col.id) * 70}ms`,
+      }}
     >
       {/* Column header */}
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
           <span className={`w-2 h-2 rounded-full ${col.dot}`} />
-          <span className={`text-sm font-medium ${col.color}`}>{col.label}</span>
+          <span className={`text-sm font-medium ${col.color}`}>
+            {col.label}
+          </span>
           <span className="text-xs text-[#444] font-mono">{tasks.length}</span>
         </div>
         <button
@@ -124,7 +141,9 @@ function KanbanColumn({ col, tasks, onDrop, onDragOver, onDragLeave, isDragOver,
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         className={`flex-1 rounded-xl border p-2 min-h-[480px] transition-all duration-150 ${col.border} ${
-          isDragOver ? col.dropBg + " border-dashed scale-[1.01]" : "bg-[#111]/50"
+          isDragOver
+            ? col.dropBg + " border-dashed scale-[1.01]"
+            : "bg-[#111]/50"
         }`}
       >
         <div className="flex flex-col gap-2">
@@ -165,20 +184,29 @@ function BoardMembers({ projectId }) {
     <div className="w-72 border-l border-[#1a1a1a] bg-[#0c0c0c] flex flex-col">
       <div className="px-6 py-5 border-b border-[#1a1a1a]">
         <h3 className="text-sm font-semibold text-white">Team Workload</h3>
-        <p className="text-xs text-[#555] mt-1">{members.length} active members</p>
+        <p className="text-xs text-[#555] mt-1">
+          {members.length} active members
+        </p>
       </div>
       <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-3">
         {members.map((m) => (
-          <div key={m.id} className="flex items-center justify-between p-3 rounded-xl bg-[#141414] border border-[#1e1e1e] hover:border-[#2a2a2a] transition-colors">
+          <div
+            key={m.id}
+            className="flex items-center justify-between p-3 rounded-xl bg-[#141414] border border-[#1e1e1e] hover:border-[#2a2a2a] transition-colors"
+          >
             <div className="flex items-center gap-2.5 overflow-hidden">
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
                 {m.name[0].toUpperCase()}
               </div>
               <div className="truncate">
-                <p className="text-sm font-medium text-[#e0e0e0] truncate">{m.name}</p>
+                <p className="text-sm font-medium text-[#e0e0e0] truncate">
+                  {m.name}
+                </p>
               </div>
             </div>
-            <span className={`shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded-full ${m.task_count > 0 ? "text-amber-400 bg-amber-500/10 border border-amber-500/20" : "text-[#555] bg-[#1a1a1a]"}`}>
+            <span
+              className={`shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded-full ${m.task_count > 0 ? "text-amber-400 bg-amber-500/10 border border-amber-500/20" : "text-[#555] bg-[#1a1a1a]"}`}
+            >
               {m.task_count}
             </span>
           </div>
@@ -205,10 +233,25 @@ function DocsCarousel({ projectId, navigate }) {
     <div className="border-t border-[#1a1a1a] bg-[#0c0c0c] px-8 py-6 shrink-0">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-          <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <svg
+            className="w-4 h-4 text-indigo-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
           Project Documents
         </h3>
-        <button onClick={() => navigate(`/project/${projectId}/docs`)} className="text-xs text-[#555] hover:text-white transition-colors">
+        <button
+          onClick={() => navigate(`/project/${projectId}/docs`)}
+          className="text-xs text-[#555] hover:text-white transition-colors"
+        >
           View All →
         </button>
       </div>
@@ -227,8 +270,12 @@ function DocsCarousel({ projectId, navigate }) {
                 {new Date(doc.updated_at).toLocaleDateString()}
               </span>
             </div>
-            <h4 className="text-sm font-semibold text-[#e0e0e0] truncate">{doc.title || "Untitled Document"}</h4>
-            <p className="text-[11px] text-[#666] mt-1.5 truncate font-medium">By {doc.created_by_name}</p>
+            <h4 className="text-sm font-semibold text-[#e0e0e0] truncate">
+              {doc.title || "Untitled Document"}
+            </h4>
+            <p className="text-[11px] text-[#666] mt-1.5 truncate font-medium">
+              By {doc.created_by_name}
+            </p>
           </button>
         ))}
       </div>
@@ -339,19 +386,35 @@ export default function ProjectBoard() {
             ← Dashboard
           </button>
           <span className="text-[#333]">/</span>
-          <span className="text-white text-sm font-medium">{projectName || "Project"}</span>
+          <span className="text-white text-sm font-medium">
+            {projectName || "Project"}
+          </span>
         </div>
         <div className="flex items-end justify-between">
           <div>
             <h1 className="text-xl font-semibold text-white">Board</h1>
-            <p className="text-xs text-[#444] mt-0.5">{tasks.length} task{tasks.length !== 1 ? "s" : ""}</p>
+            <p className="text-xs text-[#444] mt-0.5">
+              {tasks.length} task{tasks.length !== 1 ? "s" : ""}
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(`/project/${projectId}/docs`)}
               className="px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 text-sm font-medium rounded-lg transition-all flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
               Project Docs
             </button>
             <button
@@ -369,14 +432,20 @@ export default function ProjectBoard() {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Kanban columns */}
           <div className="flex-1 overflow-x-auto px-8 py-6">
-            <div className="flex gap-5 h-full" style={{ minWidth: "max-content" }}>
+            <div
+              className="flex gap-5 h-full"
+              style={{ minWidth: "max-content" }}
+            >
               {COLUMNS.map((col) => (
                 <KanbanColumn
                   key={col.id}
                   col={col}
                   tasks={columnTasks(col.id)}
                   isDragOver={dragOverCol === col.id}
-                  onDragOver={(e) => { handleDragOver(e); setDragOverCol(col.id); }}
+                  onDragOver={(e) => {
+                    handleDragOver(e);
+                    setDragOverCol(col.id);
+                  }}
                   onDragLeave={() => setDragOverCol(null)}
                   onDrop={handleDrop}
                   onTaskClick={setSelectedTask}
@@ -385,7 +454,7 @@ export default function ProjectBoard() {
               ))}
             </div>
           </div>
-          
+
           {/* Documents Carousel */}
           <DocsCarousel projectId={projectId} navigate={navigate} />
         </div>

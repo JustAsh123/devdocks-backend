@@ -9,15 +9,22 @@ function ProjectCard({ project, selected, onSelect }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const formattedDate = new Date(project.created_at).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
-  });
+  const formattedDate = new Date(project.created_at).toLocaleDateString(
+    "en-IN",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    },
+  );
 
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
     getProjectMembers(project.id)
-      .then((res) => { if (res.data.success) setMembers(res.data.members); })
+      .then((res) => {
+        if (res.data.success) setMembers(res.data.members);
+      })
       .catch(() => {});
   }, [project.id]);
 
@@ -31,7 +38,10 @@ function ProjectCard({ project, selected, onSelect }) {
       }`}
     >
       {showModal && (
-        <InviteMemberModal project={project} onClose={() => setShowModal(false)} />
+        <InviteMemberModal
+          project={project}
+          onClose={() => setShowModal(false)}
+        />
       )}
 
       {/* Header */}
@@ -44,7 +54,10 @@ function ProjectCard({ project, selected, onSelect }) {
         </div>
         {user.id === project.owner_id && (
           <button
-            onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowModal(true);
+            }}
             className="btn-hover text-xs text-[#444] hover:text-white border border-[#222] hover:border-[#3a3a3a] px-2.5 py-1 rounded-lg transition-all shrink-0"
           >
             + Invite
@@ -67,13 +80,18 @@ function ProjectCard({ project, selected, onSelect }) {
 
       {/* Open Board */}
       <button
-        onClick={(e) => { e.stopPropagation(); navigate(`/project/${project.id}`); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/project/${project.id}`);
+        }}
         className="btn-hover w-full text-center py-2 rounded-lg border border-[#222] text-xs text-[#444]
           hover:border-white/20 hover:text-white hover:bg-white/5 transition-all duration-200 group/btn"
       >
         <span className="inline-flex items-center gap-1.5">
           Open Board
-          <span className="transition-transform duration-200 group-hover/btn:translate-x-0.5">→</span>
+          <span className="transition-transform duration-200 group-hover/btn:translate-x-0.5">
+            →
+          </span>
         </span>
       </button>
     </div>

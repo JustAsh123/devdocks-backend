@@ -10,7 +10,8 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,10 +37,15 @@ export default function Login() {
     <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <Link to="/home" className="text-sm text-[#555] hover:text-white transition-colors">
+          <Link
+            to="/home"
+            className="text-sm text-[#555] hover:text-white transition-colors"
+          >
             ← DevDocks
           </Link>
-          <h1 className="text-2xl font-semibold text-white mt-5 mb-1">Welcome back</h1>
+          <h1 className="text-2xl font-semibold text-white mt-5 mb-1">
+            Welcome back
+          </h1>
           <p className="text-sm text-[#555]">Log in to your account</p>
         </div>
 
@@ -81,7 +87,10 @@ export default function Login() {
 
         <p className="text-center text-xs text-[#555] mt-6">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-[#aaa] hover:text-white transition-colors">
+          <Link
+            to="/signup"
+            className="text-[#aaa] hover:text-white transition-colors"
+          >
             Sign up
           </Link>
         </p>
